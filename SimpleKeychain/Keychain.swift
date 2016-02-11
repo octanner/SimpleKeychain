@@ -1,6 +1,6 @@
 //
 //  Keychain.swift
-//  falkor
+//  SimpleKeychain
 //
 //  Created by Tim Shadel on 11/10/15.
 //  Copyright © 2016 OC Tanner. All rights reserved.
@@ -9,15 +9,17 @@
 import Foundation
 
 
-struct Keychain {
+public struct Keychain {
 
-    enum Error: ErrorType {
+    public enum Error: ErrorType {
         case NoValueForKey(String)
         case TypeMismatch(String)
         case KeychainError(String, OSStatus)
     }
+    
+    public init() { }
 
-    func valueForKey<A>(key: String) throws -> A {
+    public func valueForKey<A>(key: String) throws -> A {
         let query = [
             kSecClass as String       : kSecClassGenericPassword,
             kSecAttrAccount as String : key,
@@ -45,7 +47,7 @@ struct Keychain {
         }
     }
 
-    func optionalForKey<A>(key: String) throws -> A? {
+    public func optionalForKey<A>(key: String) throws -> A? {
         do {
             let a: A = try valueForKey(key)
             return a
@@ -58,7 +60,7 @@ struct Keychain {
         }
     }
 
-    func set(value: NSCoding, forKey key: String) throws {
+    public func set(value: NSCoding, forKey key: String) throws {
         let data = NSKeyedArchiver.archivedDataWithRootObject(value)
         let query = [
             kSecClass as String       : kSecClassGenericPassword as String,
@@ -74,7 +76,7 @@ struct Keychain {
         }
     }
 
-    func deleteValue(forKey key: String) {
+    public func deleteValue(forKey key: String) {
         let query = [
             kSecClass as String       : kSecClassGenericPassword as String,
             kSecAttrAccount as String : key ]
