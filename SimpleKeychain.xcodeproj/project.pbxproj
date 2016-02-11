@@ -10,6 +10,7 @@
 		701762381C6D0BFC008D42C6 /* SimpleKeychain.h in Headers */ = {isa = PBXBuildFile; fileRef = 701762371C6D0BFC008D42C6 /* SimpleKeychain.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7017623F1C6D0BFC008D42C6 /* SimpleKeychain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 701762341C6D0BFC008D42C6 /* SimpleKeychain.framework */; };
 		701762441C6D0BFC008D42C6 /* SimpleKeychainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701762431C6D0BFC008D42C6 /* SimpleKeychainTests.swift */; };
+		7017624F1C6D0C45008D42C6 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7017624E1C6D0C45008D42C6 /* Keychain.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +30,7 @@
 		7017623E1C6D0BFC008D42C6 /* SimpleKeychainTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SimpleKeychainTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		701762431C6D0BFC008D42C6 /* SimpleKeychainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleKeychainTests.swift; sourceTree = "<group>"; };
 		701762451C6D0BFC008D42C6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7017624E1C6D0C45008D42C6 /* Keychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +74,7 @@
 			isa = PBXGroup;
 			children = (
 				701762371C6D0BFC008D42C6 /* SimpleKeychain.h */,
+				7017624E1C6D0C45008D42C6 /* Keychain.swift */,
 				701762391C6D0BFC008D42C6 /* Info.plist */,
 			);
 			path = SimpleKeychain;
@@ -194,6 +197,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7017624F1C6D0C45008D42C6 /* Keychain.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -310,28 +314,33 @@
 		701762491C6D0BFC008D42C6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = SimpleKeychain/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.octanner.SimpleKeychain;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		7017624A1C6D0BFC008D42C6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = SimpleKeychain/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.octanner.SimpleKeychain;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -378,6 +387,7 @@
 				7017624A1C6D0BFC008D42C6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7017624B1C6D0BFC008D42C6 /* Build configuration list for PBXNativeTarget "SimpleKeychainTests" */ = {
 			isa = XCConfigurationList;
@@ -386,6 +396,7 @@
 				7017624D1C6D0BFC008D42C6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
