@@ -11,68 +11,68 @@ import Foundation
 
 public struct Keychain {
 
-    public enum Error: ErrorType {
-        case NoValueForKey(String)
-        case TypeMismatch(String)
-        case KeychainError(String, OSStatus)
+    public enum KeychainError: Error {
+        case noValueForKey(String)
+        case typeMismatch(String)
+        case keychainError(String, OSStatus)
     }
     
     public init() { }
 
-    public func valueForKey<A>(key: String) throws -> A {
+    public func valueForKey<A>(_ key: String) throws -> A {
         let query = [
             kSecClass as String       : kSecClassGenericPassword,
             kSecAttrAccount as String : key,
             kSecReturnData as String  : kCFBooleanTrue,
-            kSecMatchLimit as String  : kSecMatchLimitOne ]
+            kSecMatchLimit as String  : kSecMatchLimitOne ] as [String : Any]
 
         var dataTypeRef: AnyObject?
-        let status = withUnsafeMutablePointer(&dataTypeRef) { SecItemCopyMatching(query, UnsafeMutablePointer($0)) }
+        let status = withUnsafeMutablePointer(to: &dataTypeRef) { SecItemCopyMatching(query as CFDictionary, UnsafeMutablePointer($0)) }
 
         if status == errSecSuccess {
-            if let data = dataTypeRef as? NSData {
-                let object = NSKeyedUnarchiver.unarchiveObjectWithData(data)
+            if let data = dataTypeRef as? Data {
+                let object = NSKeyedUnarchiver.unarchiveObject(with: data)
                 if let value = object as? A {
                     return value
                 } else {
-                    throw Error.TypeMismatch(key)
+                    throw KeychainError.typeMismatch(key)
                 }
             } else {
-                throw Error.TypeMismatch(key)
+                throw KeychainError.typeMismatch(key)
             }
         } else if status == errSecItemNotFound {
-            throw Error.NoValueForKey(key)
+            throw KeychainError.noValueForKey(key)
         } else {
-            throw Error.KeychainError(key, status)
+            throw KeychainError.keychainError(key, status)
         }
     }
 
-    public func optionalForKey<A>(key: String) throws -> A? {
+    public func optionalForKey<A>(_ key: String) throws -> A? {
         do {
             let a: A = try valueForKey(key)
             return a
         }
-        catch Error.NoValueForKey {
+        catch KeychainError.noValueForKey {
             return nil
         }
         catch {
-            throw Error.TypeMismatch(key)
+            throw KeychainError.typeMismatch(key)
         }
     }
 
-    public func set(value: NSCoding, forKey key: String) throws {
-        let data = NSKeyedArchiver.archivedDataWithRootObject(value)
+    public func set(_ value: NSCoding, forKey key: String) throws {
+        let data = NSKeyedArchiver.archivedData(withRootObject: value)
         let query = [
             kSecClass as String       : kSecClassGenericPassword as String,
             kSecAttrAccount as String : key,
-            kSecValueData as String   : data ]
+            kSecValueData as String   : data ] as [String : Any]
 
-        SecItemDelete(query as CFDictionaryRef)
+        SecItemDelete(query as CFDictionary)
 
-        let status: OSStatus = SecItemAdd(query as CFDictionaryRef, nil)
+        let status: OSStatus = SecItemAdd(query as CFDictionary, nil)
 
         if status != noErr {
-            throw Error.KeychainError(key, status)
+            throw KeychainError.keychainError(key, status)
         }
     }
 
@@ -81,7 +81,7 @@ public struct Keychain {
             kSecClass as String       : kSecClassGenericPassword as String,
             kSecAttrAccount as String : key ]
 
-        SecItemDelete(query as CFDictionaryRef)
+        SecItemDelete(query as CFDictionary)
     }
     
 }
