@@ -16,9 +16,14 @@ public struct Keychain {
         case typeMismatch(String)
         case keychainError(String, OSStatus)
     }
-    
-    public init() { }
 
+    public let group: String?
+
+    public init(group: String? = nil) {
+        self.group = group
+    }
+
+    // Lookups will search all keychains, in order.
     public func valueForKey<A>(_ key: String) throws -> A {
         let query = [
             kSecClass as String       : kSecClassGenericPassword,
@@ -62,13 +67,18 @@ public struct Keychain {
 
     public func set(_ value: NSCoding, forKey key: String) throws {
         let data = NSKeyedArchiver.archivedData(withRootObject: value)
-        let query = [
+        var query = [
             kSecClass as String       : kSecClassGenericPassword as String,
             kSecAttrAccount as String : key,
             kSecValueData as String   : data ] as [String : Any]
 
+        // Delete will go through all access groups
         SecItemDelete(query as CFDictionary)
 
+        // Add to only one access group
+        if let group = group {
+            query[kSecAttrAccessGroup as String] = group
+        }
         let status: OSStatus = SecItemAdd(query as CFDictionary, nil)
 
         if status != noErr {
@@ -76,11 +86,12 @@ public struct Keychain {
         }
     }
 
+    // Delete will go through all access groups
     public func deleteValue(forKey key: String) {
         let query = [
             kSecClass as String       : kSecClassGenericPassword as String,
             kSecAttrAccount as String : key ]
-
+        
         SecItemDelete(query as CFDictionary)
     }
     
